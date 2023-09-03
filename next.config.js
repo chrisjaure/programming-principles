@@ -13,5 +13,6 @@ module.exports = withNextra({
   images: {
     unoptimized: true
   },
-  basePath: process.env.NODE_ENV === "production" ? "/programming-principles" : ""
+  basePath: process.env.NODE_ENV === "production" ? "/programming-principles" : "",
+  pageExtensions: ['mdx']
 })
