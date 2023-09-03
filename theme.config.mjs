@@ -1,6 +1,12 @@
 export default {
-  logo: <span>My Docs</span>,
+  logo: <span>Programming Principles</span>,
   project: {
-    link: "https://github.com/code-hike/codehike",
+    link: "",
   },
+  editLink: {
+    component: null
+  },
+  feedback: {
+    content: null
+  }
 }

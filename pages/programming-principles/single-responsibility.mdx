@@ -1,0 +1,107 @@
+# Single Responsibility
+
+1. Collect a city name from the user.
+2. When the user submits the form, fetch weather data for the city.
+3. When the result is received, display it.
+
+## One Component
+
+Below is a single component that meets all of the requirements.
+
+```jsx App.jsx
+const App = () => {
+  const [city, setCity] = useState('')
+  const [weather, setWeather] = useState(null)
+
+  return (
+    <div>
+      <form onSubmit={async () => {
+        const result = await fetch(`getweather?city=${city}`)
+        setWeather(await result.json())
+      }}>
+        <label>
+          City:
+          <input
+            onChange((event) => {
+              setName(event.target.value)
+            })
+            value={name}
+          />
+        </label>
+
+        <button type="submit">
+          Submit
+        </button>
+      </form>
+
+      {weather ? (
+        The weather is {weather}.
+      ) : null}
+    </div>
+  )
+}
+
+```
+
+## Multiple Components
+
+Here are three components that also meet the requirements.
+With this architecture, we have one component that handles
+each of the requirements.
+
+
+```jsx App.jsx
+import CityForm from './CityForm'
+import WeatherResult from './WeatherResult'
+
+const App = () => {
+  const [weather, setWeather] = useState(null)
+
+  return (
+    <div>
+      <CityForm onSubmit={(city) => {
+        const result = await fetch(`getweather?city=${city}`)
+        setWeather(await result.json())
+      }} />
+
+      <WeatherResult weather={weather} />
+    </div>
+  )
+}
+
+```
+
+```jsx CityForm.jsx
+export const CityForm = ({ onSubmit }) => {
+  const [city, setCity] = useState('')
+
+  return (
+    <form onSubmit={() => onSubmit(city)}>
+      <label>
+        City:
+        <input
+          onChange((event) => {
+            setName(event.target.value)
+          })
+          value={name}
+        />
+      </label>
+
+      <button type="submit">
+        Submit
+      </button>
+    </form>
+  )
+}
+```
+
+```jsx WeatherResult.jsx
+export const WeatherResult = ({ weather }) => {
+  if (weather) {
+    return (
+      <span>The weather is {weather}</span>
+    )
+  }
+  return null
+}
+```
