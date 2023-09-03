@@ -1,0 +1,21 @@
+.ch-frame-content {
+  flex-basis: auto;
+  padding: 1rem;
+}
+
+#sr-preview .ch-frame-content form {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+#sr-preview .ch-frame-content input {
+  border: solid 1px #eee;
+  margin-left: 0.2rem;
+  padding: 0.2rem;
+}
+#sr-preview .ch-frame-content button {
+  border: solid 1px #68dffc;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  background-color: #d6f7ff;
+}

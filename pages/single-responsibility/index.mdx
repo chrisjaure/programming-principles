@@ -1,46 +1,44 @@
+import { Callout } from "nextra/components";
+
 # Single Responsibility
+
+This principle can be summarized as:
+
+> A component should have only one reason to change.
+
+For more information, read https://en.wikipedia.org/wiki/Single-responsibility_principle
+
+<Callout type="warning" emoji="⚠️">
+  It's not always best to follow this principle! Every pattern has pros and
+  cons.
+</Callout>
+
+Let's explore when you should follow this principle, and the trade-offs when you do.
+
+## Example
+
+To make it easier to talk about abstract concepts, we will start by outlining a concrete problem to solve:
 
 1. Collect a city name from the user.
 2. When the user submits the form, fetch weather data for the city.
 3. When the result is received, display it.
+
+Here's a demo:
+
+import { App } from "./preview";
+
+<CH.Preview id="sr-preview">
+
+<App />
+
+</CH.Preview>
 
 ## One Component
 
 Below is a single component that meets all of the requirements.
 
 ```jsx App.jsx
-export default function App() {
-  const [city, setCity] = useState('')
-  const [weather, setWeather] = useState(null)
-
-  return (
-    <div>
-      <form onSubmit={async () => {
-        const result = await fetch(`getweather?city=${city}`)
-        setWeather(await result.json())
-      }}>
-        <label>
-          City:
-          <input
-            onChange((event) => {
-              setName(event.target.value)
-            })
-            value={name}
-          />
-        </label>
-
-        <button type="submit">
-          Submit
-        </button>
-      </form>
-
-      {weather ? (
-        The weather is {weather}.
-      ) : null}
-    </div>
-  )
-}
-
+// from ./preview.jsx 4:35
 ```
 
 ### This approach is good when
@@ -56,31 +54,31 @@ The next section shows what that refactor might look like.
 
 ## Multiple Components
 
-Here are three components that also meet the requirements.
-With this architecture, we have one component (`App`) that composes the smaller
+Here is an architecture that also meets the requirements.
+We have one component (`App`) that composes the smaller
 pieces into a working app. The form, the weather display, and the data fetching
 are all broken up into smaller pieces that are responsible for their own part.
 
-
 ```jsx App.jsx
-import CityForm from './CityForm'
-import WeatherResult from './WeatherResult'
-import { fetchWeather } from './api'
+import CityForm from "./CityForm";
+import WeatherResult from "./WeatherResult";
+import { fetchWeather } from "./api";
 
 export default function App() {
-  const [weather, setWeather] = useState(null)
+  const [weather, setWeather] = useState(null);
 
   return (
     <div>
-      <CityForm onSubmit={async (city) => {
-        setWeather(await fetchWeather(city))
-      }} />
+      <CityForm
+        onSubmit={async (city) => {
+          setWeather(await fetchWeather(city));
+        }}
+      />
 
       <WeatherResult weather={weather} />
     </div>
-  )
+  );
 }
-
 ```
 
 ```jsx CityForm.jsx
@@ -110,18 +108,16 @@ export default function CityForm({ onSubmit }) {
 ```jsx WeatherResult.jsx
 export default function WeatherResult({ weather }) {
   if (weather) {
-    return (
-      <span>The weather is {weather}</span>
-    )
+    return <span>The weather is {weather}</span>;
   }
-  return null
+  return null;
 }
 ```
 
 ```js api.js
 export async function fetchWeather(city) {
-  const result = await fetch(`getweather?city=${city}`)
-  return result.json()
+  const result = await fetch(`getweather?city=${city}`);
+  return result.json();
 }
 ```
 
@@ -143,4 +139,3 @@ a couple new problems to work through:
 
 Now we need to know how to use props for #1 and callbacks for #2. This overhead
 was not present in the single component approach.
-
