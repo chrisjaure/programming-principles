@@ -60,65 +60,19 @@ pieces into a working app. The form, the weather display, and the data fetching
 are all broken up into smaller pieces that are responsible for their own part.
 
 ```jsx App.jsx
-import CityForm from "./CityForm";
-import WeatherResult from "./WeatherResult";
-import { fetchWeather } from "./api";
-
-export default function App() {
-  const [weather, setWeather] = useState(null);
-
-  return (
-    <div>
-      <CityForm
-        onSubmit={async (city) => {
-          setWeather(await fetchWeather(city));
-        }}
-      />
-
-      <WeatherResult weather={weather} />
-    </div>
-  );
-}
+// from ./refactor/App.jsx
 ```
 
 ```jsx CityForm.jsx
-export default function CityForm({ onSubmit }) {
-  const [city, setCity] = useState('')
-
-  return (
-    <form onSubmit={() => onSubmit(city)}>
-      <label>
-        City:
-        <input
-          onChange((event) => {
-            setName(event.target.value)
-          })
-          value={name}
-        />
-      </label>
-
-      <button type="submit">
-        Submit
-      </button>
-    </form>
-  )
-}
+// from ./refactor/CityForm.jsx
 ```
 
 ```jsx WeatherResult.jsx
-export default function WeatherResult({ weather }) {
-  if (weather) {
-    return <span>The weather is {weather}</span>;
-  }
-  return null;
-}
+// from ./refactor/WeatherResult.jsx
 ```
 
 ```js api.js
-export async function fetchWeather(city) {
-  const result = await fetch(`getweather?city=${city}`);
-  return result.json();
-}
+// from ./refactor/api.js 3:6
 ```
 
 ### This approach is good when
@@ -134,8 +88,10 @@ It's important to note the trade-offs we're making with this approach.
 Tracing the flow of data through the app is now more difficult! We've got
 a couple new problems to work through:
 
-1. passing data down from parent to child components
-2. passing data up from child to parent components
+1. passing data down from parent to child
+2. passing data up from child to parent
 
 Now we need to know how to use props for #1 and callbacks for #2. This overhead
-was not present in the single component approach.
+was not present in the single component approach. Without something like Typescript
+to help give structure to data, tracing the flow of data through your app can become
+difficult.
