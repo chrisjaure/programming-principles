@@ -4,7 +4,7 @@ const withNextra = require("nextra")({
   theme: "nextra-theme-docs",
   themeConfig: "./theme.config.mjs",
   mdxOptions: {
-    remarkPlugins: [[remarkCodeHike, { theme: "material-palenight" }]],
+    remarkPlugins: [[remarkCodeHike, { theme: "min-light" }]],
   },
 })
 
@@ -13,5 +13,5 @@ module.exports = withNextra({
   images: {
     unoptimized: true
   },
-  basePath: "/programming-principles"
+  basePath: process.env.NODE_ENV === "production" ? "/programming-principles" : ""
 })
