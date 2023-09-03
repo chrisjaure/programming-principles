@@ -13,4 +13,5 @@ module.exports = withNextra({
   images: {
     unoptimized: true
   },
+  basePath: "/programming-principles"
 })
