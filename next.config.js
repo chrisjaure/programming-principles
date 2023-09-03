@@ -1,7 +1,6 @@
 const { remarkCodeHike } = require("@code-hike/mdx")
 
 const withNextra = require("nextra")({
-  output: "export",
   theme: "nextra-theme-docs",
   themeConfig: "./theme.config.mjs",
   mdxOptions: {
@@ -9,4 +8,9 @@ const withNextra = require("nextra")({
   },
 })
 
-module.exports = withNextra()
+module.exports = withNextra({
+  output: "export",
+  images: {
+    unoptimized: true
+  },
+})
