@@ -9,7 +9,7 @@
 Below is a single component that meets all of the requirements.
 
 ```jsx App.jsx
-const App = () => {
+export default function App() {
   const [city, setCity] = useState('')
   const [weather, setWeather] = useState(null)
 
@@ -43,25 +43,37 @@ const App = () => {
 
 ```
 
+### This approach is good when
+
+- you're building a proof of concept
+- you are learning
+- the requirements won't change over time
+- you have a tight deadline
+
+In fact, most code starts out this way because it's easy to write and understand!
+Later on, it may be refactored using the single responsibility principle.
+The next section shows what that refactor might look like.
+
 ## Multiple Components
 
 Here are three components that also meet the requirements.
-With this architecture, we have one component that handles
-each of the requirements.
+With this architecture, we have one component (`App`) that composes the smaller
+pieces into a working app. The form, the weather display, and the data fetching
+are all broken up into smaller pieces that are responsible for their own part.
 
 
 ```jsx App.jsx
 import CityForm from './CityForm'
 import WeatherResult from './WeatherResult'
+import { fetchWeather } from './api'
 
-const App = () => {
+export default function App() {
   const [weather, setWeather] = useState(null)
 
   return (
     <div>
-      <CityForm onSubmit={(city) => {
-        const result = await fetch(`getweather?city=${city}`)
-        setWeather(await result.json())
+      <CityForm onSubmit={async (city) => {
+        setWeather(await fetchWeather(city))
       }} />
 
       <WeatherResult weather={weather} />
@@ -72,7 +84,7 @@ const App = () => {
 ```
 
 ```jsx CityForm.jsx
-export const CityForm = ({ onSubmit }) => {
+export default function CityForm({ onSubmit }) {
   const [city, setCity] = useState('')
 
   return (
@@ -96,7 +108,7 @@ export const CityForm = ({ onSubmit }) => {
 ```
 
 ```jsx WeatherResult.jsx
-export const WeatherResult = ({ weather }) => {
+export default function WeatherResult({ weather }) {
   if (weather) {
     return (
       <span>The weather is {weather}</span>
@@ -105,3 +117,30 @@ export const WeatherResult = ({ weather }) => {
   return null
 }
 ```
+
+```js api.js
+export async function fetchWeather(city) {
+  const result = await fetch(`getweather?city=${city}`)
+  return result.json()
+}
+```
+
+### This approach is good when
+
+- the requirements will change over time
+- you want to write tests for individual pieces
+- you want to reuse parts of the code
+- you have a decent idea how to structure the code
+
+### New problems
+
+It's important to note the trade-offs we're making with this approach.
+Tracing the flow of data through the app is now more difficult! We've got
+a couple new problems to work through:
+
+1. passing data down from parent to child components
+2. passing data up from child to parent components
+
+Now we need to know how to use props for #1 and callbacks for #2. This overhead
+was not present in the single component approach.
+
