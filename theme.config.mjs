@@ -11,5 +11,6 @@ export default {
     return {
       titleTemplate: '%s - Programming Principles'
     }
-  }
+  },
+  faviconGlyph: "💻"
 }
