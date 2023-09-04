@@ -6,5 +6,10 @@ export default {
   docsRepositoryBase: "https://github.com/chrisjaure/programming-principles/blob/main",
   feedback: {
     content: null
+  },
+  useNextSeoProps() {
+    return {
+      titleTemplate: '%s - Programming Principles'
+    }
   }
 }
